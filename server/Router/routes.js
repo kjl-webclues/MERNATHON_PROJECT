@@ -6,7 +6,8 @@ const authenticate = require('../middleware/checkAuth');
 const bcrypt = require('bcrypt');
 const cloudinary = require('../utils/cloudinary');
 const upload = require('../utils/multer');
-const path = require('path')
+const path = require('path');
+const { log } = require('console');
 
 //================================== For Register User ===================================//
 router.post('/signUp', async (req, res) => {
@@ -106,6 +107,7 @@ router.put('/changePasword/:id', authenticate, async (req, res) => {
 
         if (userLogin) {
             const validate = await bcrypt.compare(oldPassword, userLogin.password)
+            console.log("validate", validate);
             if (validate) {
                 const bcryptPass = await bcrypt.hash(password, 10);
                 const bcryptCPass = await bcrypt.hash(confirmpassword, 10);                
@@ -205,7 +207,8 @@ router.delete('/deleteGenres', authenticate, async (req, res) => {
 //================================== For CreateNft ===================================//
 router.post('/uploadNFT', authenticate, async (req, res) => {
     try {
-        const userId = req.query.id;
+        const userId = req.query.Id;
+        // console.log("userId", userId);
 
         const { title, description, price } = req.body.values
         
@@ -214,8 +217,10 @@ router.post('/uploadNFT', authenticate, async (req, res) => {
         const coverImage = req.body.CoverImage
 
         const nft = { title, description, price, audioFile, coverImage }
+        // console.log("nft", nft);
         
-        const newNFT = await Admin.updateOne({ _id: userId }, { $push: { NFT: nft } })
+        const newNFT = await Admin.updateOne({ _id: userId }, { $push: { NFT: nft }})
+        // console.log("newNFT", newNFT);
         
         res.send({msg: "NFT create Sucessfully!"})
                 
@@ -239,7 +244,7 @@ router.post('/addNFTImage', authenticate, upload.single('image'), async (req, re
 })
 
 //============================= Add Audio Nft =============================
-router.post('/uploadAudioFile', authenticate, upload.single('audio'), async (req, res) => {
+router.post('/uploadAudioFile',authenticate, upload.single('audio'), async (req, res) => {
 
     try {
         const file = req.file;
@@ -265,7 +270,34 @@ router.post('/uploadAudioFile', authenticate, upload.single('audio'), async (req
         res.status(err)
     }
 });
+//================================== For CreateNft ===================================//
+router.get('/getNFT', async (req, res) => {
+    try {
 
+        let aggregateQuery = [];
+
+        aggregateQuery.push(
+            {
+                $unwind: "$NFT"
+            },
+            {
+                $sort: {
+                    "NFT.createAt": -1
+                }
+            }
+        );
+
+        const playList = await Admin.aggregate([aggregateQuery]);
+
+        res.send(playList)
+    }
+    catch (err) {
+        //============================= Send Error Message =============================
+        res.send(err)
+    }
+});
+
+//================================== For Count Artist and Genres ===================================//
 router.get('/getArtistAndGenresCount', authenticate, async (req, res) => {
     try {
         const aggregateQuery = [];

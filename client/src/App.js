@@ -40,7 +40,7 @@ const App = () => {
               <ProtectedRoute exact path='/dashboard' component={Dashboard} isAuth={cookie} />
               <ProtectedRoute exact path='/createGenres' component={CreateGenres} isAuth={cookie} />
               <ProtectedRoute exact path='/adminGenres' component={Genres} isAuth={cookie} />
-              <ProtectedRoute exact path='/editGenres/:id' component={CreateGenres} />
+              <ProtectedRoute exact path='/editGenres/:id' component={CreateGenres} isAuth={cookie} />
               <ProtectedRoute exact path='/profile' component={Profile} isAuth={cookie} />
             </>
           ) : null

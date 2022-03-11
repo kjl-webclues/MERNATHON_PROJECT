@@ -1,7 +1,7 @@
 import axios from "axios";
 import { toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
-import { ADD_GENRES, CHANGE_PASSWORD, DELETE_GENERS, EDIT_GENRES, GET_ARTIST_AND_GENRES_COUNT, GET_GENRES, LOGIN_USER, LOGIN_USER_PROFILE, LOGOUT_USER, REGISTER_USER, UPDATE_GENRES, UPDATE_USER_PROFILE, UPLOAD_NFT, UPLOAD_NFT_AUDIO, UPLOAD_NFT_IMAGE, VALIDE_REGISTER } from "./ActionType";
+import { ADD_GENRES, CHANGE_PASSWORD, DELETE_GENERS, EDIT_GENRES, GET_ARTIST_AND_GENRES_COUNT, GET_GENRES, GET_NFT, LOGIN_USER, LOGIN_USER_PROFILE, LOGOUT_USER, REGISTER_USER, UPDATE_GENRES, UPDATE_USER_PROFILE, UPLOAD_NFT, UPLOAD_NFT_AUDIO, UPLOAD_NFT_IMAGE, VALIDE_REGISTER } from "./ActionType";
 toast.configure()
 
 
@@ -155,20 +155,20 @@ export const delete_Genres = (id) => dispatch => {
 
 //================================== Upload NFT Action Start =============================//
 export const upload_NFT = (userId, values, AudioFile, CoverImage) => dispatch => {
-    axios.post(`/createBlog/?userId=${userId}`, {values, AudioFile, CoverImage})
+    axios.post(`/uploadNFT/?Id=${userId}`, {values, AudioFile, CoverImage})
         .then((res) => {                
-                toast.success("Upload NFT Successfully!", { position: toast.POSITION.TOP_LEFT, autoClose:2000 });                            
-                dispatch({ type: UPLOAD_NFT })
+                toast.success(res.data.msg, { position: toast.POSITION.TOP_LEFT, autoClose:2000 });                            
+                dispatch({ type: UPLOAD_NFT, payload: res.data })
             })
         .catch(error => {
-                toast.error("NFT Can Not Upload", { position: toast.POSITION.TOP_LEFT, autoClose:2000 });
+                toast.error("Nft Title Already Exist!", { position: toast.POSITION.TOP_LEFT, autoClose:2000 });
                 console.log('error', error);
             })
 }
 
 //================================== Add NFT IMAge Action Start =============================//
 export const add_NftImage = (CoverImage) => dispatch => {
-    axios.post(`/AddBlogBanner`, CoverImage)
+    axios.post(`/addNFTImage`, CoverImage)
         .then(res => {
             // console.log("banner", res.data);
             dispatch({ type: UPLOAD_NFT_IMAGE, payload: res.data})            
@@ -181,27 +181,35 @@ export const add_NftImage = (CoverImage) => dispatch => {
 export const upload_AudioFile = (values) => dispatch => {
         axios.post(`/uploadAudioFile`, values)
             .then((res) => {
+                console.log("res.data", res.data);
                 dispatch({ type: UPLOAD_NFT_AUDIO, payload: res.data })
             })
             .catch(err => {
                 toast.error("File Is Not An Audio file!", { position: toast.POSITION.TOP_CENTER, autoClose: 2000 });
-
-            })
-    
+                console.log(err);
+            })    
 }
+
+//================================== Get NFT Action Start =============================//
+export const get_NFT = () => dispatch => {
+    axios.get(`/getNFT`)
+            .then((res) => {
+                dispatch({ type: GET_NFT, payload: res.data })
+            })
+            .catch(err => {
+                console.log(err);
+            })
+}
+
 //================================== get getArtistAndGenresCount Action Start =============================//
-
-export const getArtistAndGenresCount = () => {
-
-    return (dispatch) => {
+export const getArtistAndGenresCount = () => dispatch => {
         axios.get(`/getArtistAndGenresCount`)
             .then((res) => {
                 dispatch({ type: GET_ARTIST_AND_GENRES_COUNT, payload: res.data })
             })
             .catch(err => {
                 console.log(err);
-            })
-    }
+            })    
 }
 
 //================================== Logout User Action Start =============================//

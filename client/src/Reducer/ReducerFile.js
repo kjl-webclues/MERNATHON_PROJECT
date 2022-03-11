@@ -1,4 +1,4 @@
-import { ADD_GENRES, CHANGE_PASSWORD, DELETE_GENERS, EDIT_GENRES, GET_ARTIST_AND_GENRES_COUNT, GET_GENRES, LOGIN_USER, LOGIN_USER_PROFILE, LOGOUT_USER, REGISTER_USER, UPDATE_GENRES, UPDATE_USER_PROFILE, UPLOAD_NFT, UPLOAD_NFT_AUDIO, UPLOAD_NFT_IMAGE } from "../Action/ActionType"
+import { ADD_GENRES, CHANGE_PASSWORD, DELETE_GENERS, EDIT_GENRES, GET_ARTIST_AND_GENRES_COUNT, GET_GENRES, GET_NFT, LOGIN_USER, LOGIN_USER_PROFILE, LOGOUT_USER, REGISTER_USER, UPDATE_GENRES, UPDATE_USER_PROFILE, UPLOAD_NFT, UPLOAD_NFT_AUDIO, UPLOAD_NFT_IMAGE } from "../Action/ActionType"
 
 const initialState = {
     loginStatus: false,
@@ -50,8 +50,7 @@ const ReducerFile = (state = initialState, action) => {
         
         case CHANGE_PASSWORD: {
             return {
-                ...state,
-                authenticateUser: action.payload, 
+                ...state
             }
         }
             
@@ -105,14 +104,17 @@ const ReducerFile = (state = initialState, action) => {
         case UPLOAD_NFT_IMAGE: {
             return {
                 ...state,
-                CoverImage: action.payload
+                CoverImage: action.payload,
+                Toggle : false
             }
         }
             
         case UPLOAD_NFT_AUDIO: {
             return {
                 ...state,
-                AudioFile: action.payload
+                AudioFile: action.payload,
+                Toggle : false
+
             }
         }
             
@@ -121,6 +123,13 @@ const ReducerFile = (state = initialState, action) => {
                 ...state,
                 ArtistCount: action.payload.ArtistCount,
                 GenresCount: action.payload.GenresCount
+            }
+        }
+            
+        case GET_NFT: {
+            return {
+                ...state,
+                AudioFile: action.payload
             }
         }
         

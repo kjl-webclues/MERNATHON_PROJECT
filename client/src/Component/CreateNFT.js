@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import * as Yup from 'yup';
 import { useFormik } from 'formik';
 import { useHistory } from 'react-router-dom';
-import queryString from 'query-string';
 import { useDispatch, useSelector } from "react-redux";
 import { add_NftImage, upload_AudioFile, upload_NFT } from '../Action/Actions';
 
@@ -14,18 +13,18 @@ const CreateNFT = () => {
     console.log("coverImage", coverImage);
     console.log("audioFile", audioFile);
 
-
-    const { id } = queryString.parse(window.location.search)
     
     const dispatch = useDispatch()
     const history = useHistory()
 
     const Toggle = useSelector(state => state.Toggle)
     const authenticateUser = useSelector(state => state.authenticateUser)
+
     const CoverImage = useSelector(state => state.CoverImage)
     const AudioFile = useSelector(state => state.AudioFile)
 
     const userId = authenticateUser._id
+    console.log("userId", userId);
 
     const validationSchema = Yup.object().shape({
         title: Yup.string()
@@ -34,7 +33,7 @@ const CreateNFT = () => {
         
         description: Yup.string()
             .max(255, "must be 255 character or less")
-            .required("Genres Description is Required!"),
+            .required("NFT Description is Required!"),
         
         price: Yup.string()
             .required("Price is Requird!")
@@ -50,11 +49,12 @@ const CreateNFT = () => {
     const formik = useFormik({
         validationSchema,
         initialValues,
-        onSubmit: (values) => {            
+        onSubmit: (values) => {   
+            console.log("values", values);
                 const formData = new FormData();
                 formData.append('audio', audioFile[0]);
+                setvalue(values)                                             
                 dispatch(upload_AudioFile(formData))
-                setvalue(values)                                     
         }     
     })
 
@@ -63,7 +63,7 @@ const CreateNFT = () => {
         if (AudioFile.length !== 0) {
             const formData = new FormData();
             formData.append('image', coverImage[0]);
-            dispatch((formData));
+            dispatch(add_NftImage(formData));
         }
     }, [AudioFile]);
 
@@ -85,7 +85,6 @@ const CreateNFT = () => {
   return (
       <>
           <div className='wrapper'>
-              {/* {id ? <h1>Update Artist</h1> :<h1>Create Artist</h1>}                 */}
               <h1>Create NFT</h1>
                     <div className="mainDiv">
                         <div className="subDiv">
@@ -131,10 +130,10 @@ const CreateNFT = () => {
                                         </div>
                                     </div>
                                 ) : null}    
-                                <label>AudioFile</label>
+                                <label>AudioFile</label><br/>
                                 <input type="file"   onChange={(e) => setAudioFile(e.target.files)} /><br />
 
-                                <label>CoverImage</label>                            
+                                <label>CoverImage</label><br/>                            
                                 <input type="file"  className="nftImage" onChange={(e) => setCoverImage(e.target.files)} /><br />
                                                             
                                 <button className='registerbtn' type='submit'>Publish</button>                                 
