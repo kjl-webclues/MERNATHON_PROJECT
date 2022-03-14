@@ -5,7 +5,7 @@ import { get_NFT } from '../Action/Actions'
 const HomePage = () => {
   const dispatch = useDispatch()
   const AudioFile = useSelector(state => state.AudioFile)
-  console.log("AudioFile", AudioFile);
+  // console.log("AudioFile", AudioFile);
 
   useEffect(() => {
     dispatch(get_NFT())

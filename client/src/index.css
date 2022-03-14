@@ -1,3 +1,5 @@
+/** @format */
+
 body {
   margin: 0;
   background-color: rgb(234, 225, 243);
@@ -185,4 +187,12 @@ p {
   font-size: medium;
   font-weight: 600;
   margin-top: 10px;
+}
+
+#generesName {
+  /* justify-content: space-around; */
+  display: flex;
+  padding: 2px;
+  margin: 2px;
+  margin-left: 70px;
 }

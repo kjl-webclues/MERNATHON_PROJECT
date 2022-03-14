@@ -13,7 +13,7 @@ const RegisterForm = () => {
     const validRegister = useSelector(state => state.validRegister)
 
     const [checkGenres, setCheckGenres] = useState([]);
-
+    console.log("checkGenres", checkGenres);
     const handleClick = (e) => {
         const { id, checked } = e.target;
         setCheckGenres([...checkGenres, id]);
@@ -84,7 +84,7 @@ const RegisterForm = () => {
         initialValues,
         onSubmit: (values) => {
             console.log("values", values);
-            dispatch(register_user(values))
+            dispatch(register_user(values, checkGenres))
         },   
     })
 

@@ -50,7 +50,8 @@ const App = () => {
           authenticateUser.role === 'artist' ? (
             <>
               <ProtectedRoute exact path='/genres' component={VisitorGenres} isAuth={cookie} />
-              <ProtectedRoute exact path='/createNFT' component={CreateNFT} isAuth={cookie} />              
+              <ProtectedRoute exact path='/createNFT' component={CreateNFT} isAuth={cookie} />
+              <ProtectedRoute exact path='/artist' component={Artists} isAuth={cookie} />                            
             </>
           ): null
         }
@@ -65,8 +66,9 @@ const App = () => {
               <ProtectedRoute exact path='/adminGenres' component={Genres} isAuth={cookie} />
               <ProtectedRoute exact path='/editGenres/:id' component={CreateGenres} />
               <ProtectedRoute exact path='/profile' component={Profile} isAuth={cookie} />
-
-              <ProtectedRoute exact path='/createNFT' component={CreateNFT} isAuth={cookie} /> 
+              <ProtectedRoute exact path='/createNFT' component={CreateNFT} isAuth={cookie} />
+              {/* <ProtectedRoute exact path='/artist' component={Artists} isAuth={cookie} />                             */}
+              
 
         <Route exact path='/registerPage' component={RegisterForm} />
         <Route exact path='/loginPage' component={LoginForm}></Route>

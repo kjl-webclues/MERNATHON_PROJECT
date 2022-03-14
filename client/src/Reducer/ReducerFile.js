@@ -1,10 +1,11 @@
-import { ADD_GENRES, CHANGE_PASSWORD, DELETE_GENERS, EDIT_GENRES, GET_ARTIST_AND_GENRES_COUNT, GET_GENRES, GET_NFT, LOGIN_USER, LOGIN_USER_PROFILE, LOGOUT_USER, REGISTER_USER, UPDATE_GENRES, UPDATE_USER_PROFILE, UPLOAD_NFT, UPLOAD_NFT_AUDIO, UPLOAD_NFT_IMAGE } from "../Action/ActionType"
+import { ADD_GENRES, CHANGE_PASSWORD, DELETE_GENERS, EDIT_GENRES, GET_ARTIST, GET_ARTIST_AND_GENRES_COUNT, GET_GENRES, GET_NFT, LOGIN_USER, LOGIN_USER_PROFILE, LOGOUT_USER, REGISTER_USER, UPDATE_GENRES, UPDATE_USER_PROFILE, UPLOAD_NFT, UPLOAD_NFT_AUDIO, UPLOAD_NFT_IMAGE, VALIDE_REGISTER } from "../Action/ActionType"
 
 const initialState = {
     loginStatus: false,
     validRegister: false,
     authenticateUser: '',
     genres: [],
+    Artists: [],
     totalPage: [],
     deleteToggle: false,
     Toggle: false,
@@ -22,7 +23,13 @@ const ReducerFile = (state = initialState, action) => {
             return {
                 ...state,
                 validRegister: true,
-                Toggle:false
+                
+            }
+        }
+            
+        case VALIDE_REGISTER: {
+            return {
+                validRegister: false,
             }
         }
 
@@ -107,7 +114,7 @@ const ReducerFile = (state = initialState, action) => {
                 CoverImage: action.payload,
                 Toggle : false
             }
-        }
+        }   
             
         case UPLOAD_NFT_AUDIO: {
             return {
@@ -130,6 +137,15 @@ const ReducerFile = (state = initialState, action) => {
             return {
                 ...state,
                 AudioFile: action.payload
+            }
+        }
+        
+        case GET_ARTIST: {
+            return {
+                ...state,
+                totalPage: action.payload.totalPage,
+                Artists: action.payload.artist,
+                // Toggle: false
             }
         }
         

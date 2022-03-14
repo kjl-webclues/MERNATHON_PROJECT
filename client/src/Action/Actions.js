@@ -1,7 +1,7 @@
 import axios from "axios";
 import { toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
-import { ADD_GENRES, CHANGE_PASSWORD, DELETE_GENERS, EDIT_GENRES, GET_ARTIST_AND_GENRES_COUNT, GET_GENRES, GET_NFT, LOGIN_USER, LOGIN_USER_PROFILE, LOGOUT_USER, REGISTER_USER, UPDATE_GENRES, UPDATE_USER_PROFILE, UPLOAD_NFT, UPLOAD_NFT_AUDIO, UPLOAD_NFT_IMAGE, VALIDE_REGISTER } from "./ActionType";
+import { ADD_GENRES, CHANGE_PASSWORD, DELETE_GENERS, EDIT_GENRES, GET_ARTIST, GET_ARTIST_AND_GENRES_COUNT, GET_GENRES, GET_NFT, LOGIN_USER, LOGIN_USER_PROFILE, LOGOUT_USER, REGISTER_USER, UPDATE_GENRES, UPDATE_USER_PROFILE, UPLOAD_NFT, UPLOAD_NFT_AUDIO, UPLOAD_NFT_IMAGE, VALIDE_REGISTER } from "./ActionType";
 toast.configure()
 
 
@@ -199,6 +199,18 @@ export const get_NFT = () => dispatch => {
             .catch(err => {
                 console.log(err);
             })
+}
+
+//================================== Get Artist List Action Start =============================//
+export const get_Artist = (page, search) => dispatch => {
+    console.log("search", search);
+    axios.get(`/getArtist/?page=${page}&search=${search}`)
+        .then((res) => {
+            dispatch({type: GET_ARTIST, payload: res.data})
+        })
+        .catch(err => {
+            console.log(err);
+        })
 }
 
 //================================== get getArtistAndGenresCount Action Start =============================//
