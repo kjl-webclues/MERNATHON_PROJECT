@@ -17,10 +17,6 @@ const Artists = () => {
   const Artists = useSelector(state => state.Artists)
   const totalPage = useSelector(state => state.totalPage)
 
-
-  // console.log("totalPage", totalPage);
-  // console.log("Artists", Artists);
-
   const handleSearch = debounce((e) => {
     setSearch(e.target.value)
   }, 500)
@@ -48,8 +44,8 @@ const Artists = () => {
                       <p>{elem.userName}</p><br />  
                     <label>Bio</label>
                       <p>{elem.bio}</p>
-                    {/* <label>Email</label>
-                      <p>{elem.email}</p>                     */}
+                    <label>Email</label>
+                      <p>{elem.email}</p>                    
                     <label>Genres</label>                    
                     <div>
                       {

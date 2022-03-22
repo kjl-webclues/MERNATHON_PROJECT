@@ -2,14 +2,14 @@ import React, { useEffect } from 'react'
 import * as Yup from "yup";
 import { useFormik } from "formik";
 import { useDispatch, useSelector } from "react-redux";
-import { update_User_Profile, user_Profile } from '../Action/Actions';
+import { update_User_Profile } from '../Action/Actions';
 
 const Profile = () => {
   const dispatch = useDispatch()
 
-  const authenticateUser = useSelector(state => state.authenticateUser)
+    const authenticateUser = useSelector(state => state.authenticateUser)
 
-  const validationSchema = Yup.object().shape({
+    const validationSchema = Yup.object().shape({
       firstName: Yup.string()
             .max(20, "must be 20 character or less")
             .required("Firstname is Required!"),
@@ -22,7 +22,7 @@ const Profile = () => {
             .min(10, 'too short')
             .max(12, "too long")
             .required("Phone Number is Required"),    
-  })
+    })
   //////////////////////////////// Formik Values ///////////////////////////////
   const initialValues = {
             firstName: "",
@@ -41,11 +41,8 @@ const Profile = () => {
   
   useEffect(() => {
     formik.setValues(authenticateUser)
-  }, [authenticateUser, formik])
-
-  useEffect(() => {
-    dispatch(user_Profile())
-  }, [dispatch])         
+  }, [])
+        
 
   return (
     <div className='wrapper'>

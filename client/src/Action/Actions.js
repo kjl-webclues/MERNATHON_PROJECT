@@ -1,7 +1,7 @@
 import axios from "axios";
 import { toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
-import { ADD_GENRES, CHANGE_PASSWORD, DELETE_GENERS, EDIT_GENRES, GET_ARTIST, GET_ARTIST_AND_GENRES_COUNT, GET_GENRES, GET_NFT, LOGIN_USER, LOGIN_USER_PROFILE, LOGOUT_USER, REGISTER_USER, UPDATE_GENRES, UPDATE_USER_PROFILE, UPLOAD_NFT, UPLOAD_NFT_AUDIO, UPLOAD_NFT_IMAGE, VALIDE_REGISTER } from "./ActionType";
+import { ADD_GENRES, CHANGE_PASSWORD, DELETE_GENERS, EDIT_GENRES, GET_ARTIST, GET_ARTIST_AND_GENRES_COUNT, GET_GENRES, GET_NFT, LOGIN_USER, LOGIN_USER_PROFILE, LOGOUT_USER, REGISTER_USER, UPDATE_ARTIST_PROFILE, UPDATE_GENRES, UPDATE_USER_PROFILE, UPLOAD_NFT, UPLOAD_NFT_AUDIO, UPLOAD_NFT_IMAGE, VALIDE_REGISTER } from "./ActionType";
 toast.configure()
 
 
@@ -51,6 +51,7 @@ export const login_User = (values) => dispatch => {
 export const user_Profile = () => dispatch => {
         axios.get('/getUserProfile')
             .then((res) => {
+                // console.log("data",res.data);
                 dispatch({ type: LOGIN_USER_PROFILE, payload: res.data})
             })
             .catch((error) => {
@@ -59,7 +60,7 @@ export const user_Profile = () => dispatch => {
 
 }
 
-//================================== Get Login UserProfile Action Start =============================//
+//================================== Update Login UserProfile Action Start =============================//
 export const update_User_Profile = (id, email, values) => dispatch => {
     
         axios.put(`/updateUserProfile/${id}/${email}`, values)
@@ -73,6 +74,22 @@ export const update_User_Profile = (id, email, values) => dispatch => {
             })
     
 }
+
+//================================== Update ArtistProfile Action Start =============================//
+export const update_Artist_Profile = (id, values, checkGenres) => dispatch => {
+    
+    
+    axios.put(`/updateArtistProfile/${id}`, {values,checkGenres})
+        .then(res => {
+            toast.success("Artist Profile Updated Successfully!", { position: toast.POSITION.TOP_LEFT, autoClose: 2000 });
+            dispatch({type: UPDATE_ARTIST_PROFILE})            
+        })
+        .catch(err => {
+            toast.error("Artist Profile Not Updated", { position: toast.POSITION.TOP_LEFT, autoClose: 2000 });
+            console.log("error", err);
+        })
+}
+
 //================================== Change pasword Action Start =============================//
 export const change_Password = (id, values) => dispatch => {
         console.log("values", values);
@@ -100,8 +117,8 @@ export const add_Genres = (genres) => dispatch => {
         })
 }
 //================================== Get genres Action Start =============================//
-export const get_Genres = (page) => dispatch => {
-    axios.get(`/getGenres/?page=${page}`)
+export const get_Genres = (page, search) => dispatch => {
+    axios.get(`/getGenres/?page=${page}&search=${search}`)
         .then((res) => {
             // console.log("res.data ", res.data );
             dispatch({ type: GET_GENRES, payload: res.data })
@@ -203,7 +220,6 @@ export const get_NFT = () => dispatch => {
 
 //================================== Get Artist List Action Start =============================//
 export const get_Artist = (page, search) => dispatch => {
-    console.log("search", search);
     axios.get(`/getArtist/?page=${page}&search=${search}`)
         .then((res) => {
             dispatch({type: GET_ARTIST, payload: res.data})

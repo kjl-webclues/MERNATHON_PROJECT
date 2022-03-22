@@ -1,4 +1,4 @@
-import { ADD_GENRES, CHANGE_PASSWORD, DELETE_GENERS, EDIT_GENRES, GET_ARTIST, GET_ARTIST_AND_GENRES_COUNT, GET_GENRES, GET_NFT, LOGIN_USER, LOGIN_USER_PROFILE, LOGOUT_USER, REGISTER_USER, UPDATE_GENRES, UPDATE_USER_PROFILE, UPLOAD_NFT, UPLOAD_NFT_AUDIO, UPLOAD_NFT_IMAGE, VALIDE_REGISTER } from "../Action/ActionType"
+import { ADD_GENRES, CHANGE_PASSWORD, DELETE_GENERS, EDIT_GENRES, GET_ARTIST, GET_ARTIST_AND_GENRES_COUNT, GET_GENRES, GET_NFT, LOGIN_USER, LOGIN_USER_PROFILE, LOGOUT_USER, REGISTER_USER, UPDATE_ARTIST_PROFILE, UPDATE_GENRES, UPDATE_USER_PROFILE, UPLOAD_NFT, UPLOAD_NFT_AUDIO, UPLOAD_NFT_IMAGE, VALIDE_REGISTER } from "../Action/ActionType"
 
 const initialState = {
     loginStatus: false,
@@ -29,6 +29,7 @@ const ReducerFile = (state = initialState, action) => {
             
         case VALIDE_REGISTER: {
             return {
+                ...state,
                 validRegister: false,
             }
         }
@@ -37,7 +38,7 @@ const ReducerFile = (state = initialState, action) => {
             return {
                 ...state, 
                 loginStatus: true,
-                // validRegister: false
+                validRegister: false
             }
         }
             
@@ -52,6 +53,13 @@ const ReducerFile = (state = initialState, action) => {
         case UPDATE_USER_PROFILE: {
             return {
                 ...state
+            }
+        }
+            
+        case UPDATE_ARTIST_PROFILE: {
+            return {
+                ...state,
+                Toggle: false
             }
         }
         
@@ -136,7 +144,9 @@ const ReducerFile = (state = initialState, action) => {
         case GET_NFT: {
             return {
                 ...state,
-                AudioFile: action.payload
+                AudioFile: action.payload,
+                // AudioFile: [],
+                Toggle: false
             }
         }
         
@@ -148,6 +158,8 @@ const ReducerFile = (state = initialState, action) => {
                 // Toggle: false
             }
         }
+        
+        
         
         case LOGOUT_USER: {
             return {

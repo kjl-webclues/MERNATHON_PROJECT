@@ -7,13 +7,12 @@ const bcrypt = require('bcrypt');
 const cloudinary = require('../utils/cloudinary');
 const upload = require('../utils/multer');
 const path = require('path');
-const { log } = require('console');
 
 //================================== For Register User ===================================//
 router.post('/signUp', async (req, res) => {
     const {user, genres} = req.body
-    console.log("user", user);
-    console.log("genres", genres);
+    // console.log("user", user);
+    // console.log("genres", genres);
 
     try {
         const usernameExist = await Admin.findOne({userName: user.userName})
@@ -71,7 +70,7 @@ router.post('/signIn', async (req, res) => {
 //================================== For get User Profile ===================================//
 router.get('/getUserProfile', authenticate, async (req, res) => {
     try {
-        const LoginUser = req.authenticateUser  
+       const LoginUser = req.authenticateUser
         // console.log("LoginUser", LoginUser);
         res.send({LoginUser})
     } catch (err) {
@@ -84,7 +83,7 @@ router.put('/updateUserProfile/:id/:email', authenticate, async (req, res) => {
     try {
         const id = req.params.id;
         const updateValue = req.body;
-        const email = req.params.email
+        const email = req.params.email;
 
         await Admin.findByIdAndUpdate(id, updateValue, { new: true });
         res.json('Profile Updated Successfully!')
@@ -93,6 +92,27 @@ router.put('/updateUserProfile/:id/:email', authenticate, async (req, res) => {
         console.log(err);
     }
 })
+
+//================================== For Update Artist Profile ===================================//
+router.put('/updateArtistProfile/:id', authenticate, async (req, res) => {
+    try {
+        const genres = req.body.checkGenres;
+        
+        const {_id, firstName, lastName, email, bio, userName, password, role} = req.body.values;
+
+        const updatedValues = {
+            _id, firstName, lastName, email, bio, userName, password, role, genres
+        }
+           
+        const updatedUser = await Admin.findOneAndUpdate({_id: req.params.id}, updatedValues , {
+            new: false
+        });
+        res.json("Artist Profile Updated Succesfully!")
+    } catch (err) {
+        console.log(err);
+    }
+})
+
 
 //================================== For Change Password ===================================//
 router.put('/changePasword/:id', authenticate, async (req, res) => {
@@ -108,7 +128,7 @@ router.put('/changePasword/:id', authenticate, async (req, res) => {
 
         if (userLogin) {
             const validate = await bcrypt.compare(oldPassword, userLogin.password)
-            console.log("validate", validate);
+            // console.log("validate", validate);
             if (validate) {
                 const bcryptPass = await bcrypt.hash(password, 10);
                 const bcryptCPass = await bcrypt.hash(confirmpassword, 10);                
@@ -135,7 +155,7 @@ router.post('/addGenres', async (req, res) => {
     const genres = req.body
     try {
         const result = Genres(genres).save()
-        console.log("result",result);
+        // console.log("result",result);
         res.send("Genres Add")
     } catch (err) {
         console.log( "Error" + err);
@@ -143,30 +163,56 @@ router.post('/addGenres', async (req, res) => {
 })
 
 //================================== For Get Genres ===================================//
-router.get('/getGenres', async (req, res) => {
-        const page  = req.query.page
-        let limit = 10
+router.get('/getGenres', async (req, res) => {                
+try{
+    const page = req.query.page;
+    const search = req.query.search;
+        let limit = 4
         let skip = (page - 1) * limit;
-        aggregateQuery = [];
 
-    try {        
+        aggregateQuery = []
+
         aggregateQuery.push(
-            { $sort: { title: 1 } },
-            {
-                $skip: skip
-            },
-            {
-                $limit: limit
-            }
-        ) 
-        const matchUser = await Genres.aggregate([{ $sort: { title: 1 } }]);
+            { $sort: { "title": 1 } },
+        )
+
+        if (search === "") {
+            aggregateQuery.push(
+
+                {
+                    $skip: skip
+                },
+                {
+                    $limit: limit
+                }
+            )                        
+        } else if (search !== "") {
+            aggregateQuery.push(
+                {
+                    $match: {
+                        $or: [
+                            { "title": new RegExp("^" + search, 'i') },
+                        ]
+                    },
+                },
+                {
+                    $skip: skip
+                },
+                {
+                    $limit: limit
+                }
+            )
+        }
+
+        const matchUser = await Genres.aggregate([{ $sort: { "title": 1 } }]);
         let totalPage = Math.ceil(matchUser.length / limit);
         const genres = await Genres.aggregate([aggregateQuery])
+    
         res.send({ genres, totalPage })
     }
     catch (err) {
         res.send("error" + err)
-    };
+    };    
 })
 
 //================================== For Edit Genres ===================================//
@@ -206,55 +252,58 @@ router.delete('/deleteGenres', authenticate, async (req, res) => {
 })
 
 //================================== For Get Artist ===================================//
-router.get('/getArtist',  async (req, res) => {
-    const page = req.query.page;
-    const search = req.query.search;
-    console.log(search, "search");
-        let limit = 10
+router.get('/getArtist', async (req, res) => {
+    
+      try {
+        const page = req.query.page;
+        const search = req.query.search;
+        let limit = 4
         let skip = (page - 1) * limit;
-        aggregateQuery = [];
-    try {
+
+        aggregateQuery = []
+
         aggregateQuery.push(
-            { $match: { "role": "artist" } },            
+            { $match: { "role": "artist" } },
         )
 
         if (search === "") {
             aggregateQuery.push(
-               
-                { $limit: limit}, {$skip: skip}
-            )
 
-            let total = await Admin.countDocuments();
-            let totalPage = Math.ceil((total - 1) / limit);
-            const artist = await Admin.aggregate([aggregateQuery])
-            res.send({artist, totalPage})
-        }
-        else if (search !== "") {
+                {
+                    $skip: skip
+                },
+                {
+                    $limit: limit
+                }
+            )                        
+        } else if (search !== "") {
             aggregateQuery.push(
                 {
                     $match: {
                         $or: [
-                            { "userName": new RegExp("^", search, "i") },
-                            {"email": new RegExp("^", search, "i")}
+                            { "userName": new RegExp("^" + search, 'i') },
+                            { "email": new RegExp(search, 'i') },
+
                         ]
-                    }
-                },
-                {
-                    $limit: limit
+                    },
                 },
                 {
                     $skip: skip
+                },
+                {
+                    $limit: limit
                 }
             )
-            const matchUser = await Admin.aggregate([{ $match: { "role": "artist" } }]);
-            let totalPage = Math.ceil(matchUser.length / limit);
-            const artist = await Admin.aggregate([aggregateQuery])
-            res.send({artist, totalPage})
         }
 
-    } catch (err) {
-        console.log(err);
+        const matchUser = await Admin.aggregate([{ $match: { "role": "artist" } }]);
+        let totalPage = Math.ceil(matchUser.length / limit);
+        const artist = await Admin.aggregate([aggregateQuery])
+        res.send({ artist, totalPage })
     }
+    catch (err) {
+        res.send("error" + err)
+    };    
 })
 
 //================================== For CreateNft ===================================//
@@ -301,10 +350,10 @@ router.post('/uploadAudioFile',authenticate, upload.single('audio'), async (req,
 
     try {
         const file = req.file;
-        console.log("file", file);
+        // console.log("file", file);
 
         const type = path.extname(file.originalname);
-        console.log("type", type);
+        // console.log("type", type);
 
         if (type !== '.mp3' && type !== '.wav' && type !== '.sit') {
 
@@ -341,7 +390,7 @@ router.get('/getNFT', async (req, res) => {
         );
 
         const playList = await Admin.aggregate([aggregateQuery]);
-
+            // console.log(playList,);
         res.send(playList)
     }
     catch (err) {
@@ -364,10 +413,10 @@ router.get('/getArtistAndGenresCount', authenticate, async (req, res) => {
         )
 
         const artists = await Admin.aggregate([aggregateQuery]);
-        console.log("artists", artists);
+        // console.log("artists", artists);
 
         const ArtistCount = artists.length;
-        console.log('ArtistCount', ArtistCount);
+        // console.log('ArtistCount', ArtistCount);
 
         const genres = await Genres.find();
         const GenresCount = genres.length;

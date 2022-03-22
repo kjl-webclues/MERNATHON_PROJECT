@@ -35,7 +35,7 @@ input[type] {
   border-radius: 3%;
   margin-left: 2%;
   font-size: 15px;
-  color: cornflowerblue;
+  /* color: cornflowerblue; */
   background-color: rgb(241, 241, 241);
 }
 
@@ -107,11 +107,15 @@ input[type] {
 }
 
 .nav_div {
-  justify-content: space-evenly;
+  justify-content:space-evenly;
   margin: 2px;
-  display: flex;
+  display:flex;
   height: 50px;
   padding-top: 5px;
+}
+.firstname_nav{
+  color: rgb(120, 84, 149);
+  margin-left: -180px;
 }
 
 .nav_div button {
@@ -126,6 +130,7 @@ input[type] {
   font-size: large;
   width: 115px;
   text-align: center;
+  /* margin-right: 120px; */
 }
 .wrraper {
   padding-top: 10px;
@@ -155,6 +160,7 @@ label {
   font-weight: 700;
   /* font-style: italic; */
   margin: 8px;
+  margin-left: 20px;
 }
 p {
   color: rgb(62, 8, 107);
@@ -189,10 +195,9 @@ p {
   margin-top: 10px;
 }
 
-#generesName {
-  /* justify-content: space-around; */
-  display: flex;
-  padding: 2px;
-  margin: 2px;
-  margin-left: 70px;
+.generesName {
+  color: rgb(62, 8, 107);
+  font-size: larger;
+  margin: 8px;
+  display: block;
 }

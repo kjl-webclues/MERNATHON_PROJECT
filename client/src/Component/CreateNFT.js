@@ -10,8 +10,8 @@ const CreateNFT = () => {
     const [audioFile, setAudioFile] = useState('')//For Get AudioFile 
     const [value, setvalue] = useState(''); //For Get Banner
 
-    console.log("coverImage", coverImage);
-    console.log("audioFile", audioFile);
+    // console.log("coverImage", coverImage);
+    // console.log("audioFile", audioFile);
 
     
     const dispatch = useDispatch()

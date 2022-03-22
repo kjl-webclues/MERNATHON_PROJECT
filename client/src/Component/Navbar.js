@@ -15,8 +15,6 @@ const Navbar = () => {
   
     const cookie = Cookies.get("jwtLogin");
 
-
-
     const logout = () => {
       dispatch(logout_User())
       history.push('/')
@@ -28,6 +26,8 @@ const Navbar = () => {
 
     return (
       <div className='nav_div'>
+        <div className="firstname_nav">
+        {authenticateUser && (<h3>{authenticateUser && (`Welcome ${authenticateUser.firstName}`)}</h3>)}      </div>
             {
               loginStatus === false && cookie === undefined ? (
               <>
@@ -48,7 +48,8 @@ const Navbar = () => {
                     <NavLink to='/changePassword'><button>Change Password</button></NavLink>
                     <NavLink to='/createGenres'><button>Create Genres</button></NavLink>
                     <NavLink to='/adminGenres'><button>Genres</button></NavLink>
-                    <NavLink to='/artist'><button>Artist</button></NavLink>
+                    <NavLink to='/adminArtist'><button>Artist</button></NavLink>              
+                    {/* <NavLink to='/artist'><button>Artist</button></NavLink> */}
                     <button  onClick={logout}>Logout</button>
                 </>
               ) : null
@@ -61,11 +62,11 @@ const Navbar = () => {
                 <NavLink to='/artist'><button>Artist</button></NavLink>
                 <NavLink to='/genres'><button>Genres</button></NavLink>
                 <NavLink to='/createNFT'><button>CreateNFT</button></NavLink>
+                <NavLink to='/artistProfile'><button>Profile</button></NavLink>                
                 <button  onClick={logout}>Logout</button>
               </>
               ): null
-            }                                                   
-                            
+            }                                        
       </div>
     )
 }

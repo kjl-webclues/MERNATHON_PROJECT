@@ -55,7 +55,7 @@ const CreateGenres = () => {
         }
     }, [id])
     const edit_Genres = genres.find((elem) => elem._id === id ? elem : null)
-    console.log("edit_Genres", edit_Genres);
+    // console.log("edit_Genres", edit_Genres);
 
 
     //============================= set update values =============================//
